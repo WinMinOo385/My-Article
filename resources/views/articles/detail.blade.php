@@ -9,6 +9,7 @@
             <div class="card-body text-primary">
                 <h5 class="card-title">{{ $article['title'] }}</h5>
                 <p class="card-text">{{ $article['body'] }}</p>
+                <a class="btn btn-warning" href="{{ url("/articles/delete/$article->id") }}">Delete</a>
             </div>
             <div class="card-footer">
                 {{ $article->created_at->diffForHumans() }}
@@ -28,8 +29,21 @@
                 @endforeach
             </div>
         </div>
-
-
+        @if ($errors->any())
+            <div class="alert alert-warning" role="alert">
+                <ol>
+                    @foreach ( $errors->all() as $error )
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ol>
+            </div>
+        @endif
+        <form action="{{ url('/comments/add') }}" method="post">
+            @csrf
+            <input type="hidden" value="{{ $article['id'] }}" name="article_id">
+            <textarea class="form-control" placeholder="Leave a Comment Here" id="content" name="content" style="height: 100px" ></textarea>
+            <input class="btn btn-primary mt-3" type="submit" id="submit" value="Add Comment">
+        </form>
     </div>
     </div>
 @endsection
