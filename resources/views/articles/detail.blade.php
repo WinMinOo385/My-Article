@@ -9,7 +9,9 @@
             <div class="card-body text-primary">
                 <h5 class="card-title">{{ $article['title'] }}</h5>
                 <p class="card-text">{{ $article['body'] }}</p>
+                @auth
                 <a class="btn btn-warning" href="{{ url("/articles/delete/$article->id") }}">Delete</a>
+                @endauth
             </div>
             <div class="card-footer d-flex justify-content-between align0items-center   ">
                 <span>Created By : {{ $article->user['name'] }}</span>
