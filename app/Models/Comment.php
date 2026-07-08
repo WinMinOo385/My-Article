@@ -13,6 +13,10 @@ class Comment extends Model
     protected $table = 'comment';
 
     public function article(){
-        return $this->belongsTo('App\Models\Category');
+        return $this->belongsTo('App\Models\Article', 'article_id');
+    }
+
+    public function user(){
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 }

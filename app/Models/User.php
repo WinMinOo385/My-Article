@@ -29,4 +29,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function article(){
+        $this->hasMany('App\Models\Article');
+    }
+
+    public function comment(){
+        $this->hasMany('App\Models\Comment');
+    }
+
+    
 }

@@ -18,4 +18,8 @@ class Article extends Model
     public function comment(){
         return $this->hasMany('App\Models\Comment');
     }
+
+    public function user(){
+        return $this->belongsTo('App\Models\User', 'creator_id');
+    }
 }

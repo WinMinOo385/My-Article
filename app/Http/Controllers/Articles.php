@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Categories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
 
 class Articles extends Controller
 {
@@ -58,6 +60,11 @@ class Articles extends Controller
     public function delete($id)
     {
         $article = Article::find($id);
+
+        if(Gate::denies('article-delete', $article)){
+            return back()->with('error', 'Unauthorize');;
+        }
+
         $article->delete();
         return redirect("/articles");
     }

@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Article;
 use App\Models\Categories;
 use App\Models\Comment;
+use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,10 +25,17 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        User::factory()->create([
-            'name' => 'WMO',
-            'email' => 'wmo@developer.com',
-            'password' => 'P@ssw0rd',
+        User::factory()->createMany([
+            [
+                'name' => 'WMO',
+                'email' => 'wmo@dev.com',
+                'password' => 'P@ssw0rd',
+            ],
+            [
+                'name' => 'developer',
+                'email' => 'dev@dev.com',
+                'password' => 'P@ssw0rd',
+            ],
         ]);
 
         Categories::factory(6)->create();
