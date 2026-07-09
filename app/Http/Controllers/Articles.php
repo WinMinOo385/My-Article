@@ -6,7 +6,7 @@ use App\Models\Article;
 use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-
+use Illuminate\Support\Facades\Log;
 
 class Articles extends Controller
 {
@@ -53,19 +53,27 @@ class Articles extends Controller
         $article = new Article;
         $article->title = request('title');
         $article->body = request('body');
+        $article->creator_id = auth()->user()->id;
         $article->category_id = request('category_id');
         $article->save();
+
+        Log::info('Articl is Created Successfully.', [
+            'user_id' => auth()->id(),
+           'title' => $article->title,
+        ]);
+
+        return redirect('/articles');      
     }
 
     public function delete($id)
     {
         $article = Article::find($id);
 
-        if(Gate::denies('article-delete', $article)){
+        if (Gate::denies('article-delete', $article)) {
             return back()->with('error', 'Unauthorize');;
         }
 
         $article->delete();
-        return redirect("/articles");
+        return redirect('/articles');
     }
 }
