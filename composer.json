@@ -11,7 +11,8 @@
         "laravel/tinker": "^3.0",
         "laravel/ui": "^4.6",
         "livewire/livewire": "^4.3",
-        "monolog/monolog": "^3.10"
+        "monolog/monolog": "^3.10",
+        "predis/predis": "^3.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

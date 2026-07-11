@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryApiController extends Controller
 {
@@ -12,7 +13,10 @@ class CategoryApiController extends Controller
      */
     public function index()
     {
-        $categories = Categories::all();
+        $categories = Cache::rememberForever('categories', function () {
+            return Categories::all()->toArray();
+        });
+        
         return $categories;
     }
 
@@ -23,8 +27,9 @@ class CategoryApiController extends Controller
     {
         $category = new Categories;
         $category->name = request()->name;
-
         $category->save();
+
+        Cache::forget('categories');
 
         return $category;
     }
@@ -46,8 +51,10 @@ class CategoryApiController extends Controller
     {
         $category = Categories::find($id);
         $category->name = request()->name;
-
         $category->save();
+
+        Cache::forget('categories');
+
         return $category;
     }
 
@@ -58,6 +65,9 @@ class CategoryApiController extends Controller
     {
         $category = Categories::find($id);
         $category->delete();
+
+        Cache::forget('categories');
+
         return $category;
     }
 }

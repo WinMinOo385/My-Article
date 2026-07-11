@@ -7,6 +7,7 @@ use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class Articles extends Controller
 {
@@ -30,7 +31,10 @@ class Articles extends Controller
 
     public function add()
     {
-        $categories = Categories::all();
+        // $categories = Categories::all();
+        $categories = Cache::rememberForever('categories', function () {
+            return Categories::all()->toArray();
+        });
 
         return view('articles.add', [
             'categories' => $categories
@@ -57,6 +61,8 @@ class Articles extends Controller
         $article->category_id = request('category_id');
         $article->save();
 
+        Cache::flush();
+
         Log::info('Articl is Created Successfully.', [
             'user_id' => auth()->id(),
            'title' => $article->title,
@@ -74,6 +80,9 @@ class Articles extends Controller
         }
 
         $article->delete();
+        
+        Cache::flush();
+        
         return redirect('/articles');
     }
 }

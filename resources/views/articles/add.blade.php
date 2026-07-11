@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    @auth
     <div class="container">
         @if ($errors->any())
             <div class="alert alert-warning" role="alert">
@@ -37,4 +38,5 @@
             </div>
         </form>
     </div>
+    @endauth
 @endsection
