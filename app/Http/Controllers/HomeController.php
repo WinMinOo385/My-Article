@@ -13,7 +13,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // Only apply auth middleware to the home dashboard, not the landing page
+        $this->middleware('auth')->except('landing');
     }
 
     /**
@@ -24,5 +25,22 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    /**
+     * Show the landing page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function landing()
+    {
+        $users = [
+            ['id' => 1, 'name' => 'Mg Mg'],
+            ['id' => 2, 'name' => 'Mya Mya'],
+        ];
+
+        return view('myfirst', [
+            'users' => $users
+        ]);
     }
 }

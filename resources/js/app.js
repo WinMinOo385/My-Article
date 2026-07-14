@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const themes = [
-        'light', 'dark', 'dim', 'retro', 'cyberpunk', 'lofi', 'cupcake', 'dracula', 
+        'light', 'dark', 'dim', 'retro','caramellatte', 'cyberpunk', 'lofi', 'cupcake', 'dracula', 
         'business', 'valentine', 'halloween', 'garden', 'forest', 'aqua', 'black', 
-        'luxury', 'night', 'winter', 'sunset', 'emerald', 'corporate', 'synthwave', 'mocha', 'barbie'
+        'luxury', 'night', 'winter', 'sunset', 'emerald', 'corporate', 'synthwave', 'mocha', 'barbie', 'blood', 'lemonade',
     ];
     
     const themeNames = {
@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'dark': 'Dark',
         'dim': 'Dim',
         'retro': 'Retro',
+        'caramellatte': 'Caramellatte',
         'cyberpunk': 'Cyberpunk',
         'lofi': 'Lofi',
         'cupcake': 'Cupcake',
@@ -30,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'synthwave': 'Synthwave',
         'mocha': 'Mocha',
         'barbie': 'Barbie',
+        'blood': 'Blood',
+        'lemonade': 'Lemonade',
     };
     
     let currentTheme = localStorage.getItem('theme') || 'dim';

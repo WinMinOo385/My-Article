@@ -3,8 +3,18 @@
 @section('content')
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold">Articles</h1>
             @auth
+            <form action="{{ url('/articles') }}" method="get" class="w-full">
+                <label class="input">
+                    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </g>
+                    </svg>
+                    <input type="search" placeholder="Search Article" name="q" value="{{ request('q') }}" />
+                </label>
+            </form>
                 <a href="/articles/add" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -18,7 +28,8 @@
         @if ($articles->count() > 0)
             <div class="grid gap-6">
                 @foreach ($articles as $article)
-                    <div class="card bg-base-100 border border-base-300 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div
+                        class="card bg-base-100 border border-base-300 shadow-md hover:shadow-lg transition-shadow duration-300">
                         <div class="card-body">
                             <h2 class="card-title text-xl font-bold mb-2 text-base-content">{{ $article->title }}</h2>
                             <p class="text-base-content mb-4">{{ Str::limit($article->body, 150) }}</p>
@@ -51,12 +62,11 @@
                     @else
                         <a href="{{ $articles->previousPageUrl() }}" class="join-item btn">«</a>
                     @endif
-
                     @foreach ($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
                         @if ($page == $articles->currentPage())
                             <button class="join-item btn btn-active text-base-content">{{ $page }}</button>
                         @else
-                            <a href="{{ $url }}" class="join-item btn">{{ $page }}</a>
+                            <a href="{{ $articles->appends(request()->query())->url($page) }}" class="join-item btn">{{ $page }}</a>
                         @endif
                     @endforeach
 

@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Controller;
 
-Route::get('/', [Controller::class, 'index']);
-
+Route::get('/', [App\Http\Controllers\HomeController::class, 'landing']);
 
 Auth::routes();
 
@@ -12,7 +10,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 
-//========== Start Article CRUD Routes ==========
+//========== Start Article Routes ==========
 
 use App\Http\Controllers\Articles;
 
@@ -22,9 +20,9 @@ Route::post('/articles/add', [Articles::class, 'create']);
 Route::get('/articles/detail/{id}', [Articles::class, 'detail']);
 Route::get('/articles/delete/{id}', [Articles::class, 'delete']);
 
-//========== End Article CRUD Routes ==========
+//========== End Article Routes ==========
 
-//========== Start Comments CRUD Routes ==========
+//========== Start Comments Routes ==========
 
 use App\Http\Controllers\Comments;
 
@@ -32,4 +30,4 @@ use App\Http\Controllers\Comments;
 Route::post('/comments/add', [Comments::class, 'add']);
 Route::get('/comments/delete/{id}', [Comments::class, 'delete']);
 
-//========== End Comments CRUD Routes ==========
+//========== End Comments Routes ==========

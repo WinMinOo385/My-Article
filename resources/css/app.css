@@ -91,8 +91,10 @@
 }
 
 
+
+
 @plugin "daisyui" {
-    themes: light --default, dark --prefersdark, barbie, mocha, dim, retro, cyberpunk, lofi, cupcake, dracula, business, valentine, halloween, garden, forest, aqua, black, luxury, night, winter, sunset, emerald, corporate, synthwave;
+    themes: light --default, dark --prefersdark,blood, caramellatte, barbie, mocha, dim, retro, cyberpunk, lofi, cupcake, dracula, business, valentine, halloween, garden, forest, aqua, black, luxury, night, winter, sunset, emerald, corporate, synthwave, lemonade;
 }
 
 

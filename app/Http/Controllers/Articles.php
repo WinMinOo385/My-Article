@@ -5,15 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Categories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 
 class Articles extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = Article::orderBy('id', 'desc')->paginate(4);
+        if ($request->has('q') && $request->q) {
+            $searchTerm = $request->q;
+            $data = Article::where(function($query) use ($searchTerm) {
+                            $query->where('title', 'LIKE', '%' . $searchTerm . '%')
+                                  ->orWhere('body', 'LIKE', '%' . $searchTerm . '%');
+                        })
+                        ->orderBy('id', 'desc')
+                        ->paginate(4)
+                        ->appends(['q' => $searchTerm]);
+        } else {
+            $data = Article::orderBy('id', 'desc')->paginate(4);
+        }
 
         return view('articles.index', [
             'articles' => $data
@@ -63,12 +74,12 @@ class Articles extends Controller
 
         Cache::flush();
 
-        Log::info('Articl is Created Successfully.', [
+        Log::info('Article is Created Successfully.', [
             'user_id' => auth()->id(),
-           'title' => $article->title,
+            'title' => $article->title,
         ]);
 
-        return redirect('/articles');      
+        return redirect('/articles');
     }
 
     public function delete($id)
@@ -76,13 +87,13 @@ class Articles extends Controller
         $article = Article::find($id);
 
         if (Gate::denies('article-delete', $article)) {
-            return back()->with('error', 'Unauthorize');;
+            return back()->with('error', 'Unauthorize');
         }
 
         $article->delete();
-        
+
         Cache::flush();
-        
+
         return redirect('/articles');
     }
 }
