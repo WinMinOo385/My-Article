@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8" id="article">
         <!-- Article Card -->
         <div class="card bg-base-100 border border-base-300 shadow-xl mb-8">
             <div class="card-body">
@@ -29,17 +29,6 @@
                             <p class="text-sm text-gray-500">{{ $article->created_at->diffForHumans() }}</p>
                         </div>
                     </div>
-
-                    @auth
-                        <a class="btn btn-neutral" href="{{ url("/articles/delete/$article->id") }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Delete Article
-                        </a>
-                    @endauth
                 </div>
             </div>
         </div>
@@ -132,6 +121,58 @@
                             </button>
                         </div>
                     </form>
+                    <div class="fab fab-flower">
+                        <div tabindex="0" role="button" class="btn btn-circle btn-lg btn-primary">
+                            <svg aria-label="New" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                                class="size-6">
+                                <path
+                                    d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                            </svg>
+                        </div>
+                        <div class="fab-close">
+                            <span class="btn btn-circle btn-lg btn-error">✕</span>
+                        </div>
+                        <div class="tooltip">
+                            <div class="tooltip-content">
+                                <div class="animate-bounce text-content-400 -rotate-10 text-2xl font-black">Go Top</div>
+                            </div>
+                            <a class="btn btn-circle btn-lg btn-primary" href="#article">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-arrow-up-icon lucide-arrow-up">
+                                    <path d="m5 12 7-7 7 7" />
+                                    <path d="M12 19V5" />
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="tooltip">
+                            <div class="tooltip-content">
+                                <div class="animate-bounce text-content-400 -rotate-10 text-2xl font-black">Edit</div>
+                            </div>
+                            <a class="btn btn-circle btn-lg btn-primary" href="{{ url("/articles/edit/$article->id") }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil">
+                                    <path
+                                        d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                                    <path d="m15 5 4 4" />
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="tooltip">
+                            <div class="tooltip-content">
+                                <div class="animate-bounce text-content-400 -rotate-10 text-2xl font-black">Delete</div>
+                            </div>
+                            <a class="btn btn-circle btn-primary btn-lg" href="{{ url("/articles/delete/$article->id") }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>
+                            </a>
+                        </div>
+
+                    </div>
                 @endauth
             </div>
         </div>

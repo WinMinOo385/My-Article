@@ -19,6 +19,9 @@ Route::get('/articles/add', [Articles::class, 'add']);
 Route::post('/articles/add', [Articles::class, 'create']);
 Route::get('/articles/detail/{id}', [Articles::class, 'detail']);
 Route::get('/articles/delete/{id}', [Articles::class, 'delete']);
+Route::get('/articles/edit/{id}', [Articles::class, 'edit']);
+Route::post('/articles/edit/{id}', [Articles::class, 'edit']);
+
 
 //========== End Article Routes ==========
 

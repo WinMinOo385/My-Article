@@ -15,13 +15,14 @@ class Articles extends Controller
     {
         if ($request->has('q') && $request->q) {
             $searchTerm = $request->q;
-            $data = Article::where(function($query) use ($searchTerm) {
-                            $query->where('title', 'LIKE', '%' . $searchTerm . '%')
-                                  ->orWhere('body', 'LIKE', '%' . $searchTerm . '%');
-                        })
-                        ->orderBy('id', 'desc')
-                        ->paginate(4)
-                        ->appends(['q' => $searchTerm]);
+            $data = Article::where(function ($query) use ($searchTerm) {
+                $query
+                    ->where('title', 'LIKE', '%' . $searchTerm . '%')
+                    ->orWhere('body', 'LIKE', '%' . $searchTerm . '%');
+            })
+                ->orderBy('id', 'desc')
+                ->paginate(4)
+                ->appends(['q' => $searchTerm]);
         } else {
             $data = Article::orderBy('id', 'desc')->paginate(4);
         }
@@ -95,5 +96,51 @@ class Articles extends Controller
         Cache::flush();
 
         return redirect('/articles');
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $article = Article::findOrFail($id);
+
+        // Check authorization AFTER getting the article
+        if (Gate::denies('article-edit', $article)) {
+            return back()->with('error', 'Unauthorize');
+        }
+
+        if ($request->isMethod('post')) {
+            $validator = validator(request()->all(), [
+                'title' => 'required',
+                'body' => 'required',
+                'category_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
+
+            $article->title = $request->title;
+            $article->body = $request->body;
+            $article->category_id = $request->category_id;
+            $article->save();
+
+            Cache::flush();
+
+            Log::info('Article is Updated Successfully.', [
+                'user_id' => auth()->id(),
+                'article_id' => $article->id,
+                'title' => $article->title,
+            ]);
+
+            return redirect('/articles/detail/' . $article->id);
+        }
+
+        $categories = Cache::rememberForever('categories', function () {
+            return Categories::all()->toArray();
+        });
+
+        return view('articles.edit', [
+            'article' => $article,
+            'categories' => $categories
+        ]);
     }
 }
