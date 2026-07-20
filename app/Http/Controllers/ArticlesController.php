@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
-class Articles extends Controller
+class ArticlesController extends Controller
 {
     public function index(Request $request)
     {

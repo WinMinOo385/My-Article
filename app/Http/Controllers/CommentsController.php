@@ -6,7 +6,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class Comments extends Controller
+class CommentsController extends Controller
 {
     public function add()
     {

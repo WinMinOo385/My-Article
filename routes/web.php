@@ -1,36 +1,37 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ArticlesController;
+use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'landing']);
 
+
+Route::get('/', [HomeController::class, 'landing']);
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 
 //========== Start Article Routes ==========
 
-use App\Http\Controllers\Articles;
 
-Route::get('/articles', [Articles::class, 'index']);
-Route::get('/articles/add', [Articles::class, 'add']);
-Route::post('/articles/add', [Articles::class, 'create']);
-Route::get('/articles/detail/{id}', [Articles::class, 'detail']);
-Route::get('/articles/delete/{id}', [Articles::class, 'delete']);
-Route::get('/articles/edit/{id}', [Articles::class, 'edit']);
-Route::post('/articles/edit/{id}', [Articles::class, 'edit']);
+Route::get('/articles', [ArticlesController::class, 'index']);
+Route::get('/articles/add', [ArticlesController::class, 'add']);
+Route::post('/articles/add', [ArticlesController::class, 'create']);
+Route::get('/articles/detail/{id}', [ArticlesController::class, 'detail']);
+Route::get('/articles/delete/{id}', [ArticlesController::class, 'delete']);
+Route::get('/articles/edit/{id}', [ArticlesController::class, 'edit']);
+Route::post('/articles/edit/{id}', [ArticlesController::class, 'edit']);
 
 
 //========== End Article Routes ==========
 
 //========== Start Comments Routes ==========
 
-use App\Http\Controllers\Comments;
 
-// Route::get('/comments', [Comments::class, 'index']);
-Route::post('/comments/add', [Comments::class, 'add']);
-Route::get('/comments/delete/{id}', [Comments::class, 'delete']);
+// Route::get('/comments', [CommentsController::class, 'index']);
+Route::post('/comments/add', [CommentsController::class, 'add']);
+Route::get('/comments/delete/{id}', [CommentsController::class, 'delete']);
 
 //========== End Comments Routes ==========
