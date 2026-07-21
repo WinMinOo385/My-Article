@@ -10,14 +10,11 @@ class CommentsController extends Controller
 {
     public function add()
     {
-        $validator = validator(request()->all(), [
+
+        $request->validator([
             'article_id' => 'required',
             'content' => 'required',
         ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
 
         $comment = new Comment;
         $comment->content = request('content');
@@ -35,7 +32,7 @@ class CommentsController extends Controller
         if (Gate::allows('comment-delete', $comment)) {
             $comment->delete();
             return back();
-        }else{
+        } else {
             return back()->with('error', 'Unauthorize');
         }
     }

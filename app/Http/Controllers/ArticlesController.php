@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\Categories;
+use App\Services\CategoryCacheService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
@@ -15,16 +14,17 @@ class ArticlesController extends Controller
     {
         if ($request->has('q') && $request->q) {
             $searchTerm = $request->q;
-            $data = Article::where(function ($query) use ($searchTerm) {
-                $query
-                    ->where('title', 'LIKE', '%' . $searchTerm . '%')
-                    ->orWhere('body', 'LIKE', '%' . $searchTerm . '%');
-            })
+            $data = Article::select('title', 'id', 'body', 'created_at')
+                ->where(function ($query) use ($searchTerm) {
+                    $query
+                        ->where('title', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('body', 'LIKE', '%' . $searchTerm . '%');
+                })
                 ->orderBy('id', 'desc')
                 ->paginate(4)
                 ->appends(['q' => $searchTerm]);
         } else {
-            $data = Article::orderBy('id', 'desc')->paginate(4);
+            $data = Article::select('title', 'id', 'body', 'created_at')->orderBy('id', 'desc')->paginate(4);
         }
 
         return view('articles.index', [
@@ -43,37 +43,31 @@ class ArticlesController extends Controller
 
     public function add()
     {
-        // $categories = Categories::all();
-        $categories = Cache::rememberForever('categories', function () {
-            return Categories::all()->toArray();
-        });
+        $categoryService = new CategoryCacheService();
+        $categories = $categoryService->getCategories();
 
         return view('articles.add', [
             'categories' => $categories
         ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
         // NOTE: https://laravel.com/docs/13.x/validation#available-validation-rules
-        $validator = validator(request()->all(), [
+
+        $request->validate([
             'title' => 'required',
             'body' => 'required',
             'category_id' => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
-
         $article = new Article;
         $article->title = request('title');
         $article->body = request('body');
-        $article->creator_id = auth()->user()->id;
+        $article->creator_id = auth()->id();
         $article->category_id = request('category_id');
         $article->save();
 
-        Cache::flush();
 
         Log::info('Article is Created Successfully.', [
             'user_id' => auth()->id(),
@@ -92,9 +86,6 @@ class ArticlesController extends Controller
         }
 
         $article->delete();
-
-        Cache::flush();
-
         return redirect('/articles');
     }
 
@@ -108,22 +99,18 @@ class ArticlesController extends Controller
         }
 
         if ($request->isMethod('post')) {
-            $validator = validator(request()->all(), [
+
+            $request->validate([
                 'title' => 'required',
                 'body' => 'required',
                 'category_id' => 'required',
             ]);
-
-            if ($validator->fails()) {
-                return back()->withErrors($validator);
-            }
 
             $article->title = $request->title;
             $article->body = $request->body;
             $article->category_id = $request->category_id;
             $article->save();
 
-            Cache::flush();
 
             Log::info('Article is Updated Successfully.', [
                 'user_id' => auth()->id(),
@@ -134,12 +121,10 @@ class ArticlesController extends Controller
             return redirect('/articles/detail/' . $article->id);
         }
 
-        $categories = Cache::rememberForever('categories', function () {
-            return Categories::all()->toArray();
-        });
+        $categoryService = new CategoryCacheService();
+        $categories = $categoryService->getCategories();
 
-        return view('articles.edit', [
-            'article' => $article,
+        return view('articles.add', [
             'categories' => $categories
         ]);
     }

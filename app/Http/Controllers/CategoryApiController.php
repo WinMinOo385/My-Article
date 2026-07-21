@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Services\CategoryCacheService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class CategoryApiController extends Controller
 {
@@ -13,11 +13,8 @@ class CategoryApiController extends Controller
      */
     public function index()
     {
-        $categories = Cache::rememberForever('categories', function () {
-            return Categories::all()->toArray();
-        });
-        
-        return $categories;
+        $categoryService = new CategoryCacheService();
+        return $categoryService->getCategories();
     }
 
     /**
@@ -29,7 +26,8 @@ class CategoryApiController extends Controller
         $category->name = request()->name;
         $category->save();
 
-        Cache::forget('categories');
+        $categoryService = new CategoryCacheService();
+        $categoryService->clearCache();
 
         return $category;
     }
@@ -39,7 +37,10 @@ class CategoryApiController extends Controller
      */
     public function show($id)
     {
-        $category = Categories::find($id);
+        $categoryService = new CategoryCacheService();
+        $categories = $categoryService->getCategories();
+        
+        $category = collect($categories)->firstWhere('id', $id);
 
         return $category;
     }
@@ -53,7 +54,8 @@ class CategoryApiController extends Controller
         $category->name = request()->name;
         $category->save();
 
-        Cache::forget('categories');
+        $categoryService = new CategoryCacheService();
+        $categoryService->clearCache();
 
         return $category;
     }
@@ -66,8 +68,11 @@ class CategoryApiController extends Controller
         $category = Categories::find($id);
         $category->delete();
 
-        Cache::forget('categories');
+        $categoryService = new CategoryCacheService();
+        $categoryService->clearCache();
 
         return $category;
     }
+
+    
 }
