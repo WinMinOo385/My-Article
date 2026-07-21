@@ -5,20 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\commentRequest;
 
 class CommentsController extends Controller
 {
-    public function add()
+    public function add(commentRequest $request)
     {
 
-        $request->validator([
-            'article_id' => 'required',
-            'content' => 'required',
-        ]);
-
+        $validated = $request->validated();
+        
         $comment = new Comment;
-        $comment->content = request('content');
-        $comment->article_id = request('article_id');
+        $comment->content = $validated['content'];
+        $comment->article_id = $validated['article_id'];
         $comment->user_id = auth()->user()->id;
         $comment->save();
 

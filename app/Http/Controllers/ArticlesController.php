@@ -7,12 +7,14 @@ use App\Services\CategoryCacheService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\articleRequest;
 
 class ArticlesController extends Controller
 {
-    public function index(Request $request)
-    {
-        if ($request->has('q') && $request->q) {
+    public function index()
+    {   
+        $request = request();
+        if ($request && $request->has('q') && $request->q) {
             $searchTerm = $request->q;
             $data = Article::select('title', 'id', 'body', 'created_at')
                 ->where(function ($query) use ($searchTerm) {
@@ -51,21 +53,17 @@ class ArticlesController extends Controller
         ]);
     }
 
-    public function create(Request $request)
-    {
+    public function create(articleRequest $request)
+    {   
         // NOTE: https://laravel.com/docs/13.x/validation#available-validation-rules
 
-        $request->validate([
-            'title' => 'required',
-            'body' => 'required',
-            'category_id' => 'required',
-        ]);
+        $validated = $request->validated();
 
         $article = new Article;
-        $article->title = request('title');
-        $article->body = request('body');
+        $article->title = $validated['title'];
+        $article->body = $validated['body'];
         $article->creator_id = auth()->id();
-        $article->category_id = request('category_id');
+        $article->category_id = $validated['category_id'];
         $article->save();
 
 
@@ -89,7 +87,7 @@ class ArticlesController extends Controller
         return redirect('/articles');
     }
 
-    public function edit(Request $request, $id)
+    public function edit(articleRequest $request, $id)
     {
         $article = Article::findOrFail($id);
 
@@ -100,15 +98,10 @@ class ArticlesController extends Controller
 
         if ($request->isMethod('post')) {
 
-            $request->validate([
-                'title' => 'required',
-                'body' => 'required',
-                'category_id' => 'required',
-            ]);
-
-            $article->title = $request->title;
-            $article->body = $request->body;
-            $article->category_id = $request->category_id;
+            $validated = $request->validated();
+            $article->title = $validated['title'];
+            $article->body = $validated['body'];
+            $article->category_id = $validated['category_id'];
             $article->save();
 
 
